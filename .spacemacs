@@ -28,7 +28,9 @@ values."
      emacs-lisp
      clojure
      typescript
-     haskell
+     (haskell :variables
+              haskell-enable-ghci-ng-support t
+              haskell-process-type 'stack-ghci)
      (git :variables
           git-enable-github-support t)
      osx
@@ -249,35 +251,27 @@ any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
   ;; Restore window position
   (desktop-save-mode 1)
+  (global-company-mode)
   )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+
+  ;; Indentation config
+  (setq-default indent-tabs-mode nil)
+  (setq tab-width 2)
+
   ;; Better SPC-p-f projectile finding
   (spacemacs-base/init-helm-projectile)
 
   ;; Better SPC-SPC behavior
   (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
 
-  ;; Use ghci-ng
-  (setq-default dotspacemacs-configuration-layers
-                '(haskell :variables haskell-enable-ghci-ng-support t))
   ;; Allows for type showing w/ ghc-mod, without ghci-ng
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode
     "mht"  'ghc-show-type)
-
-
-  ;;(add-to-list 'exec-path "~/.local/bin/")
-  (setq-default dotspacemacs-configuration-layers
-                '((haskell :variables haskell-process-type 'stack-ghci)))
-
-  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-  (add-hook 'haskell-mode-hook 'haskell-indentation-mode)
-  (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
-
-  (setq haskell-stylish-on-save t)
 
   (custom-set-variables
    '(haskell-process-suggest-remove-import t)
