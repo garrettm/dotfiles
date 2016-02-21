@@ -56,8 +56,6 @@
   ;; Will get uninstalled so choose wisely!
   :additional-packages
   [
-    :atom-typescript
-    :linter-tslint
     :seti-ui
     :seti-syntax
     :haskell-ghc-mod
