@@ -29,13 +29,7 @@
     ;; Get more at github.com/dvcrn/proton/tree/master/src/proton/layers/lang
     ;; -----------------------------------
     :lang/clojure
-    ;; :lang/python
-    ;; :lang/julia
-    ;; :lang/latex
-    ;; :lang/elixir
-    ;; :lang/markdown
-    ;; :lang/rust
-    ;; :lang/javascript
+    :lang/javascript
     :lang/typescript
 
     ;; -----------------------------------
@@ -58,10 +52,6 @@
   [
     :seti-ui
     :seti-syntax
-    :haskell-ghc-mod
-    :ide-haskell
-    :language-haskell
-    :autocomplete-haskell
     :build-gulp
   ]
 

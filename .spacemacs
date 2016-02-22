@@ -28,6 +28,7 @@ values."
      emacs-lisp
      clojure
      typescript
+     javascript
      (haskell :variables
               haskell-enable-ghci-ng-support t
               haskell-process-type 'stack-ghci)
@@ -106,12 +107,9 @@ values."
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
                          gruvbox
+                         seti
                          misterioso
                          gotham
-                         ;; spacemacs-dark
-                         ;; solarized-dark
-                         ;; monokai
-                         ;; zenburn
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -258,6 +256,9 @@ in `dotspacemacs/user-config'."
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
+
+  ;; does this do anything?
+  (global-set-key (kbd "<ESC>") 'evil-escape)
 
   ;; Indentation config
   (setq-default indent-tabs-mode nil)
