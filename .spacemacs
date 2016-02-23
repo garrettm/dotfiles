@@ -262,7 +262,7 @@ layers configuration. You are free to put any user code."
   (define-key evil-insert-state-map (kbd "C-left") 'evil-backward-word)
 
   ;; does this do anything?
-  (global-set-key (kbd "<ESC>") 'evil-escape)
+  ;; (global-set-key (kbd "<ESC>") 'evil-escape)
 
   ;; Indentation config
   (setq-default indent-tabs-mode nil)
