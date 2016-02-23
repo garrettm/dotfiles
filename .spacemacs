@@ -257,6 +257,10 @@ in `dotspacemacs/user-config'."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
+  ;; control right/left arrow
+  (define-key evil-insert-state-map (kbd "C-right") 'evil-forward-word)
+  (define-key evil-insert-state-map (kbd "C-left") 'evil-backward-word)
+
   ;; does this do anything?
   (global-set-key (kbd "<ESC>") 'evil-escape)
 
