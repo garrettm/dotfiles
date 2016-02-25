@@ -36,15 +36,11 @@ values."
      (git :variables
           git-enable-github-support t)
      osx
-     ;; racket
-     ;; markdown
      ;; org
      (shell :variables
             shell-default-height 30
             shell-default-position 'bottom)
-     ;; spell-checking
      syntax-checking
-     ;; version-control
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -251,6 +247,17 @@ in `dotspacemacs/user-config'."
   ;; Restore window position
   (desktop-save-mode 1)
   (global-company-mode)
+
+  (global-hl-line-mode 1)
+  (global-linum-mode)
+  (helm-mode 1)
+  (haskell-mode)
+  (global-flycheck-mode)
+
+  (ac-config-default)
+  (semantic-mode 1)
+  (global-company-mode)
+  (setq tab-width 2)
   )
 
 (defun dotspacemacs/user-config ()
@@ -283,17 +290,7 @@ layers configuration. You are free to put any user code."
   (evil-declare-not-repeat `write-file)
   (evil-declare-not-repeat `evil-write)
 
-  (global-hl-line-mode 1)
-  (global-linum-mode)
-  (helm-mode 1)
-
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
-
-  (ac-config-default)
-  (semantic-mode 1)
-  (global-company-mode)
-
-  (setq tab-width 2)
 
   ;; Clojure don't show error buffer on errors
   (setq cider-show-error-buffer nil)
