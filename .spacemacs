@@ -34,7 +34,6 @@ values."
      (haskell :variables
               haskell-enable-ghci-ng-support t
               haskell-process-type 'stack-ghci
-              haskell-enable-shm-support t
               haskell-enable-hindent-style "chris-done")
      (git :variables
           git-enable-github-support t)
