@@ -23,7 +23,9 @@ values."
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
-     auto-completion
+     (auto-completion :variables
+                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-sort-by-usage t)
      better-defaults
      emacs-lisp
      clojure
@@ -295,11 +297,6 @@ layers configuration. You are free to put any user code."
   (ac-config-default)
   (semantic-mode 1)
   (global-company-mode)
-  (setq-default dotspacemacs-configuration-layers
-                '((auto-completion :variables
-                                   auto-completion-enable-snippets-in-popup t)
-                  (auto-completion :variables
-                                   auto-completion-enable-sort-by-usage t)))
 
   (setq tab-width 2)
 
@@ -317,6 +314,7 @@ layers configuration. You are free to put any user code."
  ;; If there is more than one, they won't work right.
  '(company-idle-delay 0.05)
  '(haskell-process-suggest-remove-import t)
+ '(mac-drawing-use-gcd t)
  '(magit-commit-arguments (quote ("--all" "--allow-empty" "--verbose")))
  '(typescript-indent-level 2))
 (custom-set-faces
