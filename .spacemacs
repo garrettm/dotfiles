@@ -32,9 +32,7 @@ values."
      typescript
      javascript
      (haskell :variables
-              haskell-enable-ghci-ng-support t
-              haskell-process-type 'stack-ghci
-              haskell-enable-hindent-style "chris-done")
+              haskell-process-type 'stack-ghci)
      (git :variables
           git-enable-github-support t)
      osx
