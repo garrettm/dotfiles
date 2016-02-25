@@ -33,7 +33,9 @@ values."
      javascript
      (haskell :variables
               haskell-enable-ghci-ng-support t
-              haskell-process-type 'stack-ghci)
+              haskell-process-type 'stack-ghci
+              haskell-enable-shm-support t
+              haskell-enable-hindent-style "chris-done")
      (git :variables
           git-enable-github-support t)
      osx
@@ -279,10 +281,6 @@ layers configuration. You are free to put any user code."
   ;; Allows for type showing w/ ghc-mod, without ghci-ng
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode
     "mht"  'ghc-show-type)
-
-  (custom-set-variables
-   '(haskell-process-suggest-remove-import t)
-   )
 
   (color-theme-approximate-on)
   (evil-declare-not-repeat `write-file)
