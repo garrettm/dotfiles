@@ -258,6 +258,8 @@ in `dotspacemacs/user-config'."
   (semantic-mode 1)
   (global-company-mode)
   (setq tab-width 2)
+
+  (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
   )
 
 (defun dotspacemacs/user-config ()
