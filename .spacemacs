@@ -25,7 +25,10 @@ values."
      ;; ----------------------------------------------------------------
      (auto-completion :variables
                       auto-completion-enable-snippets-in-popup t
-                      auto-completion-enable-sort-by-usage t)
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-enable-help-tooltip t
+                      auto-completion-return-key-behavior 'complete
+                      auto-completion-tab-key-behavior 'cycle)
      better-defaults
      emacs-lisp
      clojure
@@ -246,7 +249,6 @@ any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
   ;; Restore window position
   (desktop-save-mode 1)
-  (global-company-mode)
 
   (global-hl-line-mode 1)
   (global-linum-mode)
