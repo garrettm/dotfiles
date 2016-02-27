@@ -258,8 +258,11 @@ in `dotspacemacs/user-config'."
 
   (ac-config-default)
   (semantic-mode 1)
-  (global-company-mode)
   (setq tab-width 2)
+
+  (global-company-mode)
+  (add-to-list 'company-backends 'company-ghc)
+  (custom-set-variables '(company-ghc-show-info t))
 
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
   )
