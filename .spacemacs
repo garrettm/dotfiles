@@ -265,6 +265,9 @@ in `dotspacemacs/user-config'."
   (custom-set-variables '(company-ghc-show-info t))
 
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+
+  ;; Better SPC-SPC behavior
+  (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
   )
 
 (defun dotspacemacs/user-config ()
@@ -286,9 +289,6 @@ layers configuration. You are free to put any user code."
   ;; Better SPC-p-f projectile finding
   (spacemacs-base/init-helm-projectile)
 
-  ;; Better SPC-SPC behavior
-  (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
-
   ;; Allows for type showing w/ ghc-mod, without ghci-ng
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode
     "mht"  'ghc-show-type)
@@ -301,6 +301,9 @@ layers configuration. You are free to put any user code."
 
   ;; Clojure don't show error buffer on errors
   (setq cider-show-error-buffer nil)
+
+  ;; enable syntax highlighting everywhere
+  (global-flycheck-mode)
   )
 
 
