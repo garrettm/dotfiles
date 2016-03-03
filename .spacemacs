@@ -261,7 +261,11 @@ in `dotspacemacs/user-config'."
   ;; Restore window position
   (desktop-save-mode 1)
 
+  (add-hook 'spaceline-pre-hook (lambda () (setq spaceline-minor-modes-separator "")) t)
+
   (setq-default
+   dotspacemacs-mode-line-unicode-symbols nil
+
    require-final-newline t
 
    evil-want-C-i-jump t
@@ -271,8 +275,11 @@ in `dotspacemacs/user-config'."
    ranger-override-dired t
    ranger-show-dotfiles t
 
+   which-key-idle-secondary-delay nil
+
    spaceline-buffer-encoding-abbrev-p nil
    spaceline-version-control-p nil
+
    ;; Theme modifications
    theming-modifications
    '((monokai
@@ -331,7 +338,7 @@ in `dotspacemacs/user-config'."
 
    global-flycheck-mode t
 
-   semantic-mode t
+   semantic-mode 1
 
    tab-width 2
 
@@ -359,7 +366,12 @@ layers configuration. You are free to put any user code."
   ;; (global-set-key (kbd "<ESC>") 'evil-escape)
 
   ;; Indentation config
-  (setq-default indent-tabs-mode nil)
+  (setq-default
+   indent-tabs-mode nil
+
+   ;; Clojure don't show error buffer on errors
+   cider-show-error-buffer nil)
+
   (setq tab-width 2)
 
   ;; Better SPC-p-f projectile finding
@@ -378,21 +390,12 @@ layers configuration. You are free to put any user code."
 
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
-  ;; Clojure don't show error buffer on errors
-  (setq cider-show-error-buffer nil)
-
   ;; enable syntax highlighting everywhere
   (global-flycheck-mode)
 
-  ;; Diminish
-  ;; Does not seem to work yet (causes errors)
-  (spacemacs|diminish hybrid-mode)
-  (spacemacs|diminish which-key-mode)
-  (spacemacs|diminish evil-mc-mode)
-
   ;; control right/left arrow
-  (define-key evil-insert-state-map (kbd "C-right") 'evil-forward-word)
-  (define-key evil-insert-state-map (kbd "C-left") 'evil-backward-word)
+  ;; (define-key evil-insert-state-map (kbd "C-right") 'evil-forward-word)
+  ;; (define-key evil-insert-state-map (kbd "C-left") 'evil-backward-word)
   )
 
 
@@ -403,15 +406,74 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-ghc-show-info t)
  '(company-idle-delay 0.05)
  '(haskell-process-suggest-remove-import t)
  '(mac-drawing-use-gcd t)
  '(magit-commit-arguments (quote ("--all" "--allow-empty" "--verbose")))
- '(typescript-indent-level 2))
+ '(typescript-indent-level 2)
+ '(which-key-idle-delay 0.01))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-tooltip-annotation ((t (:foreground "#ff9eb8" :background "#49483e"))))
+ '(company-tooltip-annotation-selection ((t (:background "#66d9ef"))))
  '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil)))))
+ '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
+ '(erc-timestamp-face ((t (:inherit font-lock-comment-face :foreground nil))))
+ '(evil-search-highlight-persist-highlight-face ((t (:background "#fc5fef" :foreground "#000000"))))
+ '(flycheck-fringe-error ((t (:background nil))))
+ '(flycheck-fringe-info ((t (:background nil))))
+ '(flycheck-fringe-warning ((t (:background nil))))
+ '(font-latex-sectioning-0-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-sectioning-1-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-sectioning-2-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-sectioning-3-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-sectioning-4-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-sectioning-5-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-latex-slide-title-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(font-lock-builtin-face ((t (:foreground "#ff9eb8"))))
+ '(font-lock-comment-face ((t (:slant italic))))
+ '(font-lock-doc-face ((t (:slant italic))))
+ '(font-lock-keyword-face ((t (:weight bold))))
+ '(font-lock-string-face ((t (:slant italic))))
+ '(font-lock-warning-face ((t (:underline nil))))
+ '(helm-ff-prefix ((t (:background nil :foreground "#666666" :weight bold))))
+ '(helm-prefarg ((t (:foreground "PaleGreen"))))
+ '(info-title-1 ((t (:inherit default :height 1.0 :weight bold))))
+ '(info-title-2 ((t (:inherit default :height 1.0 :weight bold))))
+ '(info-title-3 ((t (:inherit default :height 1.0 :weight bold))))
+ '(info-title-4 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-1 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-2 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-3 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-4 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-5 ((t (:inherit default :height 1.0 :weight bold))))
+ '(markdown-header-face-6 ((t (:inherit default :height 1.0 :weight bold))))
+ '(mode-line ((t (:box (:color "#999999" :line-width 1 :style released-button)))))
+ '(mode-line-inactive ((t (:box (:color "#666666" :line-width 1 :style released-button)))))
+ '(org-document-title ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-done ((t (:foreground "MediumSpringGreen"))))
+ '(org-level-1 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-2 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-3 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-4 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-5 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-6 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-7 ((t (:inherit default :height 1.0 :weight bold))))
+ '(org-level-8 ((t (:inherit default :height 1.0 :weight bold))))
+ '(powerline-active1 ((t (:box (:color "#999999" :line-width 1 :style released-button) :background "#5a5a5a"))))
+ '(powerline-active2 ((t (:box (:color "#999999" :line-width 1 :style released-button)))))
+ '(powerline-inactive1 ((t (:box (:color "#666666" :line-width 1 :style released-button)))))
+ '(powerline-inactive2 ((t (:box (:color "#666666" :line-width 1 :style released-button)))))
+ '(region ((t (:background "#998f84"))))
+ '(spacemacs-transient-state-title-face ((t (:background nil :foreground nil :inherit font-lock-warning-face))))
+ '(term ((t (:foreground nil :background nil))))
+ '(web-mode-comment-face ((t (:inherit font-lock-comment-face :foreground nil))))
+ '(web-mode-html-attr-name-face ((t (:inherit font-lock-variable-name-face :foreground nil))))
+ '(web-mode-html-attr-value-face ((t (:inherit font-lock-string-face :foreground nil))))
+ '(web-mode-html-tag-bracket-face ((t (:inherit web-mode-html-tag-face :foreground nil))))
+ '(web-mode-html-tag-face ((t (:inherit font-lock-builtin-face :foreground nil :weight bold)))))
