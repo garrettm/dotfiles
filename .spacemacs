@@ -28,22 +28,31 @@ values."
                       auto-completion-enable-sort-by-usage t
                       auto-completion-enable-help-tooltip t
                       auto-completion-return-key-behavior 'complete
-                      auto-completion-tab-key-behavior 'cycle)
+                      auto-completion-tab-key-behavior 'cycle
+                      :disabled-for org)
      better-defaults
-     emacs-lisp
      clojure
-     typescript
-     javascript
-     (haskell :variables
-              haskell-process-type 'stack-ghci)
+     emacs-lisp
+     eyebrowse
      (git :variables
           git-enable-github-support t)
+     (haskell :variables
+              haskell-process-type 'stack-ghci)
+     javascript
      osx
-     ;; org
+     org
+     ranger
      (shell :variables
+            shell-default-shell 'ansi-term
             shell-default-height 30
             shell-default-position 'bottom)
+     semantic
      syntax-checking
+     (theming :variables
+              theming-headings-inherit-from-default 'all
+              theming-headings-same-size 'all
+              theming-headings-bold 'all)
+     typescript
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -92,7 +101,7 @@ values."
    ;; directory. A string value must be a path to an image format supported
    ;; by your Emacs build.
    ;; If the value is nil then no banner is displayed. (default 'official)
-   dotspacemacs-startup-banner 'official
+   dotspacemacs-startup-banner nil
    ;; List of items to show in the startup buffer. If nil it is disabled.
    ;; Possible values are: `recents' `bookmarks' `projects'.
    ;; (default '(recents projects))
@@ -106,8 +115,10 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         monokai
                          gruvbox
                          seti
+                         material
                          misterioso
                          gotham
                          )
@@ -119,7 +130,7 @@ values."
                                :size 13
                                :weight normal
                                :width normal
-                               :powerline-scale 1.1)
+                               :powerline-scale 1.15)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -160,16 +171,16 @@ values."
    ;; (default 'cache)
    dotspacemacs-auto-save-file-location 'cache
    ;; Maximum number of rollback slots to keep in the cache. (default 5)
-   dotspacemacs-max-rollback-slots 5
+   dotspacemacs-max-rollback-slots 10
    ;; If non nil then `ido' replaces `helm' for some commands. For now only
    ;; `find-files' (SPC f f), `find-spacemacs-file' (SPC f e s), and
    ;; `find-contrib-file' (SPC f e c) are replaced. (default nil)
    dotspacemacs-use-ido nil
    ;; If non nil, `helm' will try to minimize the space it uses. (default nil)
-   dotspacemacs-helm-resize nil
+   dotspacemacs-helm-resize t
    ;; if non nil, the helm header is hidden when there is only one source.
    ;; (default nil)
-   dotspacemacs-helm-no-header nil
+   dotspacemacs-helm-no-header t
    ;; define the position to display `helm', options are `bottom', `top',
    ;; `left', or `right'. (default 'bottom)
    dotspacemacs-helm-position 'bottom
@@ -201,11 +212,11 @@ values."
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-active-transparency 90
+   dotspacemacs-active-transparency 100
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's inactive or deselected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
-   dotspacemacs-inactive-transparency 90
+   dotspacemacs-inactive-transparency 100
    ;; If non nil unicode symbols are displayed in the mode line. (default t)
    dotspacemacs-mode-line-unicode-symbols t
    ;; If non nil smooth scrolling (native-scrolling) is enabled. Smooth
@@ -239,7 +250,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup `trailing
+   dotspacemacs-whitespace-cleanup 'changed
    ))
 
 (defun dotspacemacs/user-init ()
@@ -250,24 +261,91 @@ in `dotspacemacs/user-config'."
   ;; Restore window position
   (desktop-save-mode 1)
 
-  (global-hl-line-mode 1)
-  (global-linum-mode)
-  (helm-mode 1)
-  (haskell-mode)
-  (global-flycheck-mode)
+  (setq-default
+   require-final-newline t
 
-  (ac-config-default)
-  (semantic-mode 1)
-  (setq tab-width 2)
+   evil-want-C-i-jump t
 
-  (global-company-mode)
-  (add-to-list 'company-backends 'company-ghc)
+   avy-all-windows 'all-frames
+
+   ranger-override-dired t
+   ranger-show-dotfiles t
+
+   spaceline-buffer-encoding-abbrev-p nil
+   spaceline-version-control-p nil
+   ;; Theme modifications
+   theming-modifications
+   '((monokai
+      ;; Font locking
+      (font-lock-comment-face :slant italic)
+      (font-lock-string-face :slant italic)
+      (font-lock-doc-face :slant italic)
+      (font-lock-keyword-face :weight bold)
+      (font-lock-builtin-face :foreground "#ff9eb8")
+      (font-lock-warning-face :underline nil)
+      (web-mode-html-attr-value-face
+       :inherit font-lock-string-face :foreground nil)
+      (web-mode-html-attr-name-face
+       :inherit font-lock-variable-name-face :foreground nil)
+      (web-mode-html-tag-face
+       :inherit font-lock-builtin-face :foreground nil :weight bold)
+      (web-mode-html-tag-bracket-face
+       :inherit web-mode-html-tag-face :foreground nil)
+      (web-mode-comment-face
+       :inherit font-lock-comment-face :foreground nil)
+
+      ;; Modeline
+      (mode-line :box (:color "#999999" :line-width 1 :style released-button))
+      (powerline-active1 :box (:color "#999999" :line-width 1 :style released-button)
+                         :background "#5a5a5a")
+      (powerline-active2 :box (:color "#999999" :line-width 1 :style released-button))
+      (mode-line-inactive :box (:color "#666666" :line-width 1 :style released-button))
+      (powerline-inactive1 :box (:color "#666666" :line-width 1 :style released-button))
+      (powerline-inactive2 :box (:color "#666666" :line-width 1 :style released-button))
+      (helm-prefarg :foreground "PaleGreen")
+
+      ;; Flycheck
+      (flycheck-fringe-error :background nil)
+      (flycheck-fringe-warning :background nil)
+      (flycheck-fringe-info :background nil)
+
+      ;; Other
+      (company-tooltip-annotation
+       :foreground "#ff9eb8" :background "#49483e")
+      (company-tooltip-annotation-selection :background "#66d9ef")
+      (erc-timestamp-face
+       :inherit font-lock-comment-face :foreground nil)
+      (evil-search-highlight-persist-highlight-face
+       :background "#fc5fef" :foreground "#000000")
+      (helm-ff-prefix :background nil :foreground "#666666" :weight bold)
+      (org-done :foreground "MediumSpringGreen")
+      (region :background "#998f84")
+      (spacemacs-transient-state-title-face :background nil :foreground nil :inherit font-lock-warning-face)
+      (term :foreground nil :background nil)))
+
+   ;; other stuff
+   global-hl-line-mode t
+   global-linum-mode t
+
+   helm-mode t
+
+   global-flycheck-mode t
+
+   semantic-mode t
+
+   tab-width 2
+
+   global-company-mode t
+   )
+
   (custom-set-variables '(company-ghc-show-info t))
 
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
-  ;; Better SPC-SPC behavior
-  (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
+  ;; These seem to cause errors?  I need to hook them?
+  ;; (haskell-mode)
+  ;; (ac-config-default)
+  ;; (add-to-list 'company-backends 'company-ghc)
   )
 
 (defun dotspacemacs/user-config ()
@@ -275,9 +353,7 @@ in `dotspacemacs/user-config'."
 This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
-  ;; control right/left arrow
-  (define-key evil-insert-state-map (kbd "C-right") 'evil-forward-word)
-  (define-key evil-insert-state-map (kbd "C-left") 'evil-backward-word)
+  (setq powerline-default-separator nil)
 
   ;; does this do anything?
   ;; (global-set-key (kbd "<ESC>") 'evil-escape)
@@ -288,6 +364,9 @@ layers configuration. You are free to put any user code."
 
   ;; Better SPC-p-f projectile finding
   (spacemacs-base/init-helm-projectile)
+
+  ;; Better SPC-SPC behavior
+  (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
 
   ;; Allows for type showing w/ ghc-mod, without ghci-ng
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode
@@ -304,6 +383,16 @@ layers configuration. You are free to put any user code."
 
   ;; enable syntax highlighting everywhere
   (global-flycheck-mode)
+
+  ;; Diminish
+  ;; Does not seem to work yet (causes errors)
+  (spacemacs|diminish hybrid-mode)
+  (spacemacs|diminish which-key-mode)
+  (spacemacs|diminish evil-mc-mode)
+
+  ;; control right/left arrow
+  (define-key evil-insert-state-map (kbd "C-right") 'evil-forward-word)
+  (define-key evil-insert-state-map (kbd "C-left") 'evil-backward-word)
   )
 
 
