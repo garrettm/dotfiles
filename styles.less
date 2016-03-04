@@ -1,0 +1,65 @@
+/*
+ * Your Stylesheet
+ *
+ * This stylesheet is loaded when Atom starts up and is reloaded automatically
+ * when it is changed.
+ *
+ * If you are unfamiliar with LESS, you can read more about it here:
+ * http://www.lesscss.org
+ */
+
+@import 'ui-variables';
+@import 'syntax-variables';
+
+
+.tree-view {
+
+}
+
+// style the background and foreground colors on the atom-text-editor-element
+// itself
+atom-text-editor {
+
+}
+
+// To style other content in the text editor's shadow DOM, use the ::shadow
+// expression
+atom-text-editor::shadow .cursor {
+
+}
+
+
+atom-pane-container {
+  atom-pane {
+    background-color: lighten(@syntax-background-color, 2%);
+    &:focus {
+      background-color: @syntax-background-color;
+    }
+  }
+
+  atom-pane-axis.horizontal > * {
+    border-right: 1px solid @pane-item-border-color;
+    &:last-child { border-right: none; }
+  }
+
+  atom-pane-axis.vertical > * {
+    border-bottom: 1px solid @pane-item-border-color;
+    &:last-child { border-bottom: none; }
+  }
+}
+
+// Inactive Pane
+atom-pane:not(.active) {
+  opacity: 0.8;
+
+  atom-text-editor {
+    background-color: darken(@syntax-background-color, 5%);
+  }
+
+  tabs-tab.active, .tab.active {
+    border-bottom: solid 4px darken(@tab-background-color-active, 20%);
+    &:before {
+      border-bottom: solid 4px darken(@tab-background-color-active, 20%);
+    }
+  }
+}
