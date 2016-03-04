@@ -56,10 +56,8 @@ atom-pane:not(.active) {
     background-color: darken(@syntax-background-color, 5%);
   }
 
+  // Doesn't seem to work
   tabs-tab.active, .tab.active {
-    border-bottom: solid 4px darken(@tab-background-color-active, 20%);
-    &:before {
-      border-bottom: solid 4px darken(@tab-background-color-active, 20%);
-    }
+    background-color: lighten(@tab-background-color-active, 50%);
   }
 }
