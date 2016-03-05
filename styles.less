@@ -18,8 +18,12 @@
 
 // style the background and foreground colors on the atom-text-editor-element
 // itself
-atom-text-editor {
-
+atom-text-editor,
+atom-text-editor::shadow,
+:host {
+  .wrap-guide {
+    background-color: fadeout(@syntax-background-color, 50%);
+  }
 }
 
 // To style other content in the text editor's shadow DOM, use the ::shadow
@@ -27,7 +31,6 @@ atom-text-editor {
 atom-text-editor::shadow .cursor {
 
 }
-
 
 atom-pane-container {
   atom-pane {

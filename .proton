@@ -53,6 +53,7 @@
     :seti-ui
     :seti-syntax
     :monokai-slate
+    :nucleus-dark-ui
     :build-gulp
   ]
 
@@ -69,7 +70,7 @@
     ["editor.scrollPastEnd" true]
 
     ;; to use atoms default theme, change to ["core.themes" ["one-dark-ui" "one-dark-syntax"]]
-    ["core.themes" ["seti-ui" "monokai-slate"]]
+    ["core.themes" ["nucleus-dark-ui" "monokai-slate"]]
 
     ;; proton configuration
     ["proton.core.showTabBar" true]
