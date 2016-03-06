@@ -279,7 +279,9 @@ in `dotspacemacs/user-config'."
 
    spaceline-buffer-encoding-abbrev-p nil
    spaceline-version-control-p nil
-
+   spaceline-workspace-numbers-unicode nil
+   spaceline-window-numbers-unicode nil
+   
    ;; Theme modifications
    theming-modifications
    '((monokai
