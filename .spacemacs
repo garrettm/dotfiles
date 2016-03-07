@@ -39,6 +39,7 @@ values."
      (haskell :variables
               haskell-process-type 'stack-ghci)
      javascript
+     osx
      org
      ranger
      (shell :variables
