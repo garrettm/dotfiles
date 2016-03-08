@@ -38,6 +38,8 @@ values."
           git-enable-github-support t)
      (haskell :variables
               haskell-process-type 'stack-ghci)
+     (ibuffer :variables
+              ibuffer-group-buffers-by 'projects)
      javascript
      osx
      org
@@ -276,8 +278,6 @@ layers configuration. You are free to put any user code."
 
   (setq powerline-default-separator nil)
 
-  (custom-set-variables '(company-ghc-show-info t))
-
   ;; does this do anything?
   ;; (global-set-key (kbd "<ESC>") 'evil-escape)
 
@@ -353,6 +353,9 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(company-dabbrev-code-ignore-case t)
+ '(company-dabbrev-ignore-case t)
+ '(company-etags-ignore-case t)
  '(company-ghc-show-info t)
  '(company-idle-delay 0.05)
  '(haskell-process-suggest-remove-import t)
