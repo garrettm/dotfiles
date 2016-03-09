@@ -315,13 +315,13 @@ layers configuration. You are free to put any user code."
    indent-tabs-mode nil
 
    ;; Clojure don't show error buffer on errors
-   cider-show-error-buffer nil
+   cider-show-error-buffer nil)
 
    company-dabbrev-code-ignore-case t
    company-dabbrev-ignore-case nil
-   company-etags-ignore-case t
+   company-etags-ignore-case t)
 
-   global-company-mode t)
+  (global-company-mode)
 
   (setq tab-width 2)
 
@@ -361,12 +361,12 @@ layers configuration. You are free to put any user code."
  '(company-dabbrev-ignore-case nil)
  '(company-etags-ignore-case t)
  '(company-ghc-show-info t)
- '(company-idle-delay 0.05)
+ '(company-idle-delay 0)
  '(haskell-process-suggest-remove-import t)
  '(mac-drawing-use-gcd t)
  '(magit-commit-arguments (quote ("--all" "--allow-empty" "--verbose")))
  '(typescript-indent-level 2)
- '(which-key-idle-delay 0.01))
+ '(which-key-idle-delay 0.4))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
