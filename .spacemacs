@@ -315,7 +315,7 @@ layers configuration. You are free to put any user code."
    indent-tabs-mode nil
 
    ;; Clojure don't show error buffer on errors
-   cider-show-error-buffer nil)
+   cider-show-error-buffer nil
 
    company-dabbrev-code-ignore-case t
    company-dabbrev-ignore-case nil
@@ -361,7 +361,7 @@ layers configuration. You are free to put any user code."
  '(company-dabbrev-ignore-case nil)
  '(company-etags-ignore-case t)
  '(company-ghc-show-info t)
- '(company-idle-delay 0)
+ '(company-idle-delay 0.05)
  '(haskell-process-suggest-remove-import t)
  '(mac-drawing-use-gcd t)
  '(magit-commit-arguments (quote ("--all" "--allow-empty" "--verbose")))
