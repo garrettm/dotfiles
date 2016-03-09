@@ -317,6 +317,10 @@ layers configuration. You are free to put any user code."
    ;; Clojure don't show error buffer on errors
    cider-show-error-buffer nil
 
+   company-dabbrev-code-ignore-case t
+   company-dabbrev-ignore-case nil
+   company-etags-ignore-case t
+
    global-company-mode t)
 
   (setq tab-width 2)
@@ -354,7 +358,7 @@ layers configuration. You are free to put any user code."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(company-dabbrev-code-ignore-case t)
- '(company-dabbrev-ignore-case t)
+ '(company-dabbrev-ignore-case nil)
  '(company-etags-ignore-case t)
  '(company-ghc-show-info t)
  '(company-idle-delay 0.05)
