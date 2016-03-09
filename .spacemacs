@@ -306,8 +306,6 @@ layers configuration. You are free to put any user code."
 
    helm-mode t
 
-   global-flycheck-mode t
-
    semantic-mode 1
 
    tab-width 2
@@ -319,8 +317,11 @@ layers configuration. You are free to put any user code."
 
    company-dabbrev-code-ignore-case t
    company-dabbrev-ignore-case nil
-   company-etags-ignore-case t)
+   company-etags-ignore-case t
 
+   js-indent-level 2)
+
+  (global-flycheck-mode)
   (global-company-mode)
 
   (setq tab-width 2)
