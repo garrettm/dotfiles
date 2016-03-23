@@ -25,13 +25,14 @@ values."
      ;; ----------------------------------------------------------------
      (auto-completion :variables
                       auto-completion-enable-snippets-in-popup t
-                      auto-completion-enable-sort-by-usage t
                       auto-completion-enable-help-tooltip t
                       auto-completion-return-key-behavior 'complete
                       auto-completion-tab-key-behavior 'cycle
                       :disabled-for org)
      better-defaults
+     c-c++
      clojure
+     dash
      emacs-lisp
      eyebrowse
      (git :variables
@@ -55,6 +56,7 @@ values."
               theming-headings-same-size 'all)
               ;; theming-headings-bold 'all)
      typescript
+     ycmd
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -119,6 +121,7 @@ values."
    dotspacemacs-themes '(
                          monokai
                          gruvbox
+                         darktooth
                          seti
                          material
                          misterioso
@@ -263,7 +266,15 @@ in `dotspacemacs/user-config'."
   ;; Restore window position
   (desktop-save-mode 1)
 
+  (set-variable 'ycmd-server-command '("python"))
+  (add-to-list 'ycmd-server-command (expand-file-name "~/things/ycmd/ycmd") t)
+
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
+
+  ;; ycmd
+  (add-hook 'ycmd-mode-hook #'company-ycmd-setup)
+  (add-hook 'ycmd-mode-hook #'flycheck-ycmd-setup)
+  (add-hook 'after-init-hook #'global-ycmd-mode)
 
   ;; These seem to cause errors?  I need to hook them?
   ;; (haskell-mode)
@@ -316,7 +327,7 @@ layers configuration. You are free to put any user code."
    cider-show-error-buffer nil
 
    company-dabbrev-code-ignore-case t
-   company-dabbrev-ignore-case nil
+   company-dabbrev-ignore-case t
    company-etags-ignore-case t
 
    js-indent-level 2)
@@ -324,10 +335,15 @@ layers configuration. You are free to put any user code."
   (global-flycheck-mode)
   (global-company-mode)
 
+  (add-hook 'typescript-mode-hook 'ycmd-mode)
+  (add-hook 'js2-mode-hook 'ycmd-mode)
+  ;; (global-ycmd-mode)
+
+
   (setq tab-width 2)
 
   ;; Better SPC-p-f projectile finding
-  (spacemacs-base/init-helm-projectile)
+  ;; (spacemacs-base/init-helm-projectile)
 
   ;; Better SPC-SPC behavior
   (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
@@ -342,8 +358,11 @@ layers configuration. You are free to put any user code."
 
   (add-to-list 'write-file-functions 'delete-trailing-whitespace)
 
-  ;; enable syntax highlighting everywhere
-  (global-flycheck-mode)
+  (setq
+   company-dabbrev-code-ignore-case t
+   company-dabbrev-ignore-case t
+   company-etags-ignore-case t)
+
 
   ;; control right/left arrow
   ;; (define-key evil-insert-state-map (kbd "C-right") 'evil-forward-word)
@@ -362,7 +381,7 @@ layers configuration. You are free to put any user code."
  '(company-dabbrev-ignore-case nil)
  '(company-etags-ignore-case t)
  '(company-ghc-show-info t)
- '(company-idle-delay 0.05)
+ '(company-idle-delay 0.1)
  '(haskell-process-suggest-remove-import t)
  '(mac-drawing-use-gcd t)
  '(magit-commit-arguments (quote ("--all" "--allow-empty" "--verbose")))
