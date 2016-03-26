@@ -42,7 +42,6 @@ values."
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
      javascript
-     osx
      org
      ranger
      (shell :variables
@@ -56,7 +55,10 @@ values."
               theming-headings-same-size 'all)
               ;; theming-headings-bold 'all)
      typescript
-     ycmd
+
+     ;; platform specific
+     ,@(when (string= system-type "darwin")
+          '(osx ycmd))
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -266,15 +268,16 @@ in `dotspacemacs/user-config'."
   ;; Restore window position
   (desktop-save-mode 1)
 
-  (set-variable 'ycmd-server-command '("python"))
-  (add-to-list 'ycmd-server-command (expand-file-name "~/things/ycmd/ycmd") t)
+  ;; ycmd, only on os x
+  ,@(when (string= system-type "darwin")
+      (set-variable 'ycmd-server-command '("python"))
+      (add-to-list 'ycmd-server-command (expand-file-name "~/things/ycmd/ycmd") t)
+      (add-hook 'ycmd-mode-hook #'company-ycmd-setup)
+      (add-hook 'ycmd-mode-hook #'flycheck-ycmd-setup)
+      (add-hook 'after-init-hook #'global-ycmd-mode))
 
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
-  ;; ycmd
-  (add-hook 'ycmd-mode-hook #'company-ycmd-setup)
-  (add-hook 'ycmd-mode-hook #'flycheck-ycmd-setup)
-  (add-hook 'after-init-hook #'global-ycmd-mode)
 
   ;; These seem to cause errors?  I need to hook them?
   ;; (haskell-mode)
@@ -335,8 +338,10 @@ layers configuration. You are free to put any user code."
   (global-flycheck-mode)
   (global-company-mode)
 
-  (add-hook 'typescript-mode-hook 'ycmd-mode)
-  (add-hook 'js2-mode-hook 'ycmd-mode)
+  ,@(when (string= system-type "darwin")
+      (add-hook 'typescript-mode-hook 'ycmd-mode)
+      (add-hook 'js2-mode-hook 'ycmd-mode))
+
   ;; (global-ycmd-mode)
 
 
