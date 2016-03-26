@@ -58,7 +58,8 @@ values."
 
      ;; platform specific
      ,@(when (string= system-type "darwin")
-          '(osx ycmd))
+         '(osx
+           ycmd))
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -133,9 +134,9 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Fira Mono"
                                :size 13
-                               :weight light
+                               :weight normal
                                :width normal
                                :powerline-scale 1.1)
    ;; The leader key
@@ -270,11 +271,11 @@ in `dotspacemacs/user-config'."
 
   ;; ycmd, only on os x
   ,@(when (string= system-type "darwin")
-      (set-variable 'ycmd-server-command '("python"))
-      (add-to-list 'ycmd-server-command (expand-file-name "~/things/ycmd/ycmd") t)
-      (add-hook 'ycmd-mode-hook #'company-ycmd-setup)
-      (add-hook 'ycmd-mode-hook #'flycheck-ycmd-setup)
-      (add-hook 'after-init-hook #'global-ycmd-mode))
+      '((set-variable 'ycmd-server-command '("python"))
+        (add-to-list 'ycmd-server-command (expand-file-name "~/things/ycmd/ycmd") t)
+        (add-hook 'ycmd-mode-hook #'company-ycmd-setup)
+        (add-hook 'ycmd-mode-hook #'flycheck-ycmd-setup)
+        (add-hook 'after-init-hook #'global-ycmd-mode)))
 
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
@@ -339,8 +340,8 @@ layers configuration. You are free to put any user code."
   (global-company-mode)
 
   ,@(when (string= system-type "darwin")
-      (add-hook 'typescript-mode-hook 'ycmd-mode)
-      (add-hook 'js2-mode-hook 'ycmd-mode))
+      '((add-hook 'typescript-mode-hook 'ycmd-mode)
+        (add-hook 'js2-mode-hook 'ycmd-mode)))
 
   ;; (global-ycmd-mode)
 
