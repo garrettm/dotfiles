@@ -136,7 +136,7 @@ values."
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Fira Mono"
                                :size 13
-                               :weight normal
+                               :weight bold
                                :width normal
                                :powerline-scale 1.1)
    ;; The leader key
