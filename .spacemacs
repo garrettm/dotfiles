@@ -34,7 +34,6 @@ values."
      clojure
      dash
      emacs-lisp
-     eyebrowse
      (git :variables
           git-enable-github-support t)
      (haskell :variables
@@ -57,9 +56,8 @@ values."
      typescript
 
      ;; platform specific
-     ,@(when (string= system-type "darwin")
-         '(osx
-           ycmd))
+     osx
+     ycmd
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -136,7 +134,7 @@ values."
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Fira Mono"
                                :size 13
-                               :weight bold
+                               :weight light
                                :width normal
                                :powerline-scale 1.1)
    ;; The leader key
@@ -270,12 +268,11 @@ in `dotspacemacs/user-config'."
   (desktop-save-mode 1)
 
   ;; ycmd, only on os x
-  ,@(when (string= system-type "darwin")
-      '((set-variable 'ycmd-server-command '("python"))
-        (add-to-list 'ycmd-server-command (expand-file-name "~/things/ycmd/ycmd") t)
-        (add-hook 'ycmd-mode-hook #'company-ycmd-setup)
-        (add-hook 'ycmd-mode-hook #'flycheck-ycmd-setup)
-        (add-hook 'after-init-hook #'global-ycmd-mode)))
+  (set-variable 'ycmd-server-command '("python"))
+  (add-to-list 'ycmd-server-command (expand-file-name "~/things/ycmd/ycmd") t)
+  (add-hook 'ycmd-mode-hook #'company-ycmd-setup)
+  (add-hook 'ycmd-mode-hook #'flycheck-ycmd-setup)
+  (add-hook 'after-init-hook #'global-ycmd-mode)
 
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
@@ -339,9 +336,8 @@ layers configuration. You are free to put any user code."
   (global-flycheck-mode)
   (global-company-mode)
 
-  ,@(when (string= system-type "darwin")
-      '((add-hook 'typescript-mode-hook 'ycmd-mode)
-        (add-hook 'js2-mode-hook 'ycmd-mode)))
+  (add-hook 'typescript-mode-hook 'ycmd-mode)
+  (add-hook 'js2-mode-hook 'ycmd-mode)
 
   ;; (global-ycmd-mode)
 
@@ -373,6 +369,8 @@ layers configuration. You are free to put any user code."
   ;; control right/left arrow
   ;; (define-key evil-insert-state-map (kbd "C-right") 'evil-forward-word)
   ;; (define-key evil-insert-state-map (kbd "C-left") 'evil-backward-word)
+
+  ;; (add-to-list 'ycmd-file-type-map '(typescript-mode "typescript"))
   )
 
 
