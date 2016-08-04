@@ -43,6 +43,7 @@ values."
      javascript
      org
      ranger
+     rust
      (shell :variables
             shell-default-shell 'ansi-term
             shell-default-height 30
@@ -57,16 +58,18 @@ values."
 
      ;; platform specific
      osx
-     ycmd
+     ;; ycmd
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '(color-theme-approximate
+   dotspacemacs-additional-packages '(
+                                      f
+                                      color-theme-approximate
                                       )
    ;; A list of packages and/or extensions that will not be install and loaded.
-   dotspacemacs-excluded-packages '()
+   dotspacemacs-excluded-packages '( evil-unimpaired )
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
    ;; are declared in a layer which is not a member of
    ;; the list `dotspacemacs-configuration-layers'. (default t)
@@ -120,21 +123,22 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
-                         darktooth
-                         gruvbox
                          monokai
+                         omtose-darker
+                         darktooth
                          seti
-                         material
-                         misterioso
                          gotham
+                         badwolf
+                         colorsarenice-dark
+                         flatland
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Fira Mono"
-                               :size 13
-                               :weight light
+   dotspacemacs-default-font '("Inconsolata"
+                               :size 14
+                               :weight normal
                                :width normal
                                :powerline-scale 1.1)
    ;; The leader key
@@ -267,12 +271,14 @@ in `dotspacemacs/user-config'."
   ;; Restore window position
   (desktop-save-mode 1)
 
+  (setq-default rust-enable-racer t)
+
   ;; ycmd, only on os x
-  (set-variable 'ycmd-server-command '("python"))
-  (add-to-list 'ycmd-server-command (expand-file-name "~/things/ycmd/ycmd") t)
-  (add-hook 'ycmd-mode-hook #'company-ycmd-setup)
-  (add-hook 'ycmd-mode-hook #'flycheck-ycmd-setup)
-  (add-hook 'after-init-hook #'global-ycmd-mode)
+  ;; (set-variable 'ycmd-server-command '("python"))
+  ;; (add-to-list 'ycmd-server-command (expand-file-name "~/things/ycmd/ycmd") t)
+  ;; (add-hook 'ycmd-mode-hook #'company-ycmd-setup)
+  ;; (add-hook 'ycmd-mode-hook #'flycheck-ycmd-setup)
+  ;; (add-hook 'after-init-hook #'global-ycmd-mode)
 
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
@@ -336,9 +342,8 @@ layers configuration. You are free to put any user code."
   (global-flycheck-mode)
   (global-company-mode)
 
-  (add-hook 'typescript-mode-hook 'ycmd-mode)
-  (add-hook 'js2-mode-hook 'ycmd-mode)
-
+  ;; (add-hook 'typescript-mode-hook 'ycmd-mode)
+  ;; (add-hook 'js2-mode-hook 'ycmd-mode)
   ;; (global-ycmd-mode)
 
 
@@ -381,13 +386,19 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(ansi-color-faces-vector
+   [default bold shadow italic underline bold bold-italic bold])
+ '(ansi-term-color-vector
+   [unspecified "#151718" "#CE4045" "#9FCA56" "#DCCD69" "#55B5DB" "#A074C4" "#55B5DB" "#D4D7D6"] t)
  '(company-dabbrev-code-ignore-case t)
- '(company-dabbrev-ignore-case nil)
+ '(company-dabbrev-ignore-case t)
  '(company-etags-ignore-case t)
  '(company-ghc-show-info t)
  '(company-idle-delay 0.1)
  '(compilation-message-face (quote default))
+ '(evil-want-Y-yank-to-eol t)
  '(fci-rule-color "#3E3D31" t)
+ '(flycheck-pos-tip-timeout 20)
  '(haskell-process-suggest-remove-import t)
  '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
  '(highlight-tail-colors
@@ -400,9 +411,13 @@ layers configuration. You are free to put any user code."
      ("#A45E0A" . 70)
      ("#A41F99" . 85)
      ("#3E3D31" . 100))))
+ '(hl-sexp-background-color "#1c1f26")
  '(mac-drawing-use-gcd t)
  '(magit-commit-arguments (quote ("--all" "--allow-empty" "--verbose")))
  '(magit-diff-use-overlays nil)
+ '(pos-tip-background-color "#36473A")
+ '(pos-tip-foreground-color "#FFFFC8")
+ '(tooltip-mode nil)
  '(typescript-indent-level 2)
  '(vc-annotate-background nil)
  '(vc-annotate-color-map
