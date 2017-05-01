@@ -18,13 +18,15 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
+     javascript
+     sql
      ;; ----------------------------------------------------------------
      ;; Example of useful layers you may want to use right away.
      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      (auto-completion :variables
-                      auto-completion-enable-snippets-in-popup t
+                      auto-completion-enable-snippets-in-popup nil
                       auto-completion-enable-help-tooltip t
                       auto-completion-return-key-behavior 'complete
                       auto-completion-tab-key-behavior 'cycle
@@ -37,13 +39,19 @@ values."
      (git :variables
           git-enable-github-support t)
      (haskell :variables
-              haskell-process-type 'stack-ghci)
+              haskell-process-type 'stack-ghci
+              haskell-completion-backend 'intero)
+     html
      (ibuffer :variables
               ibuffer-group-buffers-by 'projects)
-     javascript
+     ;; javascript
      org
+     purescript
      ranger
+     react
      rust
+     (scala :variables
+            scala-use-javadoc-style t)
      (shell :variables
             shell-default-shell 'ansi-term
             shell-default-height 30
@@ -123,14 +131,36 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes '(
+                         darkokai
+
+                         dracula
+
                          monokai
-                         omtose-darker
+                         molokai
+
+                         toxi
+                         spolsky
+
+                         soothe
+                         spacegray
+
+                         material
+                         ;; gotham
                          darktooth
-                         seti
-                         gotham
-                         badwolf
-                         colorsarenice-dark
-                         flatland
+                         gruvbox
+                         ;; firebelly
+                         ;; labburn
+                         ;; gruvbox-dark
+
+                         ;; dakrone        ;; 6
+                         ;; cyberpunk      ;; 6
+                         ;; cherry-blossom ;; 7
+
+                         ample          ;; 8
+                         ample-zen      ;; 8
+
+                         ;; jazz
+                         ;; niflheim
                          )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -269,7 +299,13 @@ It is called immediately after `dotspacemacs/init'.  You are free to put almost
 any user code here.  The exception is org related code, which should be placed
 in `dotspacemacs/user-config'."
   ;; Restore window position
-  (desktop-save-mode 1)
+  ;; (desktop-save-mode 1)
+
+  ;; pin ensime to stable
+  (push '("melpa-stable" . "stable.melpa.org/packages/") configuration-layer--elpa-archives)
+  (push '(ensime . "melpa-stable") package-pinned-packages)
+
+  ;; (setq-default flycheck-scalastylerc "/usr/local/etc/scalastyle_config.xml")
 
   (setq-default rust-enable-racer t)
 
@@ -282,6 +318,17 @@ in `dotspacemacs/user-config'."
 
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
+
+  ;; Make haskell mode reset indent
+  (defun haskell-indentation-advice ()
+    (when (and (< 1 (line-number-at-pos))
+               (save-excursion
+                 (forward-line -1)
+                 (string= "" (s-trim (buffer-substring (line-beginning-position) (line-end-position))))))
+      (delete-region (line-beginning-position) (point))))
+
+  (advice-add 'haskell-indentation-newline-and-indent
+              :after 'haskell-indentation-advice)
 
   ;; These seem to cause errors?  I need to hook them?
   ;; (haskell-mode)
@@ -337,7 +384,10 @@ layers configuration. You are free to put any user code."
    company-dabbrev-ignore-case t
    company-etags-ignore-case t
 
-   js-indent-level 2)
+   js2-basic-offset 2
+   js-indent-level 2
+
+   company-idle-delay 0.08)
 
   (global-flycheck-mode)
   (global-company-mode)
@@ -352,8 +402,8 @@ layers configuration. You are free to put any user code."
   ;; Better SPC-p-f projectile finding
   ;; (spacemacs-base/init-helm-projectile)
 
-  ;; Better SPC-SPC behavior
-  (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
+  ;; Changes SPC-SPC to timeout search
+  ;; (spacemacs/set-leader-keys "SPC" 'avy-goto-char-timer)
 
   ;; Allows for type showing w/ ghc-mod, without ghci-ng
   (spacemacs/set-leader-keys-for-major-mode 'haskell-mode
@@ -379,6 +429,13 @@ layers configuration. You are free to put any user code."
   )
 
 
+;; '(company-backends
+;;   (quote
+;;    (company-tide company-capf company-files
+;;                  (company-dabbrev-code company-gtags company-etags company-keywords)
+;;                  company-oddmuse company-dabbrev)))
+
+
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
 (custom-set-variables
@@ -386,125 +443,95 @@ layers configuration. You are free to put any user code."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(Linum-format "%7i ")
  '(ansi-color-faces-vector
    [default bold shadow italic underline bold bold-italic bold])
  '(ansi-term-color-vector
    [unspecified "#151718" "#CE4045" "#9FCA56" "#DCCD69" "#55B5DB" "#A074C4" "#55B5DB" "#D4D7D6"] t)
+ '(company-backends
+   (quote
+    ((company-tide company-files)
+     company-semantic company-files
+     (company-gtags company-etags company-keywords))))
  '(company-dabbrev-code-ignore-case t)
  '(company-dabbrev-ignore-case t)
  '(company-etags-ignore-case t)
  '(company-ghc-show-info t)
  '(company-idle-delay 0.1)
- '(compilation-message-face (quote default))
+ '(eclim-executable "/Applications/Eclipse.app/Contents/Eclipse/eclim")
+ '(eclimd-default-workspace "~/beam/eclimd-workspace")
+ '(eclimd-executable "/Applications/Eclipse.app/Contents/Eclipse/eclimd")
  '(evil-want-Y-yank-to-eol t)
- '(fci-rule-color "#3E3D31" t)
+ '(fci-rule-character-color "#202020")
  '(flycheck-pos-tip-timeout 20)
+ '(fringe-mode 4 nil (fringe))
+ '(global-vi-tilde-fringe-mode nil)
  '(haskell-process-suggest-remove-import t)
- '(highlight-changes-colors (quote ("#FD5FF0" "#AE81FF")))
- '(highlight-tail-colors
-   (quote
-    (("#3E3D31" . 0)
-     ("#67930F" . 20)
-     ("#349B8D" . 30)
-     ("#21889B" . 50)
-     ("#968B26" . 60)
-     ("#A45E0A" . 70)
-     ("#A41F99" . 85)
-     ("#3E3D31" . 100))))
+ '(helm-buffers-fuzzy-matching t)
+ '(helm-recentf-fuzzy-match t)
  '(hl-sexp-background-color "#1c1f26")
+ '(js-indent-level 2)
+ '(js2-basic-offset 2)
  '(mac-drawing-use-gcd t)
- '(magit-commit-arguments (quote ("--all" "--allow-empty" "--verbose")))
- '(magit-diff-use-overlays nil)
- '(pos-tip-background-color "#36473A")
- '(pos-tip-foreground-color "#FFFFC8")
+ '(magit-commit-arguments (quote ("--allow-empty" "--verbose")))
+ '(main-line-color1 "#1E1E1E")
+ '(main-line-color2 "#111111")
+ '(main-line-separator-style (quote chamfer))
+ '(package-selected-packages
+   (quote
+    (diminish log4e winum unfill fuzzy sublime-themes toxi-theme spacegray-theme soothe-theme reverse-theme color-theme-sanityinc-tomorrow grandshell-theme color-theme-sanityinc-tomorrow-night-theme color-theme-sanityinc-tomorrow-theme molokai-theme psci purescript-mode psc-ide evil avy ample-zen-theme ample-theme material-theme simple-httpd json-snatcher json-reformat dash-functional packed bind-key tern alert haml-mode mmm-mode markdown-toc markdown-mode gh-md powerline hydra seq spinner company bind-map request skewer-mode company-emacs-eclim eclim noflet ensime sbt-mode scala-mode org pcache auto-complete highlight gruvbox-dark-theme rust-mode dash sql-indent pug-mode hide-comnt anzu yasnippet magit-popup async f web-mode racer persp-mode org-plus-contrib neotree macrostep js2-refactor intero help-fns+ helm-themes helm-projectile helm-ag haskell-snippets flycheck-rust evil-mc eshell-prompt-extras cmake-mode clj-refactor cider auto-yasnippet ace-window ace-link ace-jump-helm-line iedit smartparens undo-tree haskell-mode helm helm-core projectile magit git-commit with-editor js2-mode s typescript-mode flycheck xterm-color ws-butler window-numbering which-key web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toml-mode toc-org tide tagedit stickyfunc-enhance srefactor spacemacs-theme spaceline smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder restart-emacs ranger rainbow-delimiters queue quelpa popwin pkg-info pcre2el pbcopy paredit paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file mwim multiple-cursors multi-term move-text magit-gitflow lorem-ipsum livid-mode linum-relative link-hint less-css-mode launchctl labburn-theme json-mode js-doc jade-mode info+ inflections indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-swoop helm-mode-manager helm-make helm-hoogle helm-gitignore helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet gruvbox-theme gotham-theme google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flycheck-pos-tip flycheck-haskell flx-ido firebelly-theme fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eshell-z esh-help emmet-mode elisp-slime-nav edn dumb-jump disaster dash-at-point darktooth-theme darkokai-theme dakrone-theme company-web company-tern company-statistics company-quickhelp company-ghci company-ghc company-cabal company-c-headers column-enforce-mode color-theme-approximate coffee-mode cmm-mode clojure-snippets clojure-mode clean-aindent-mode clang-format cider-eval-sexp-fu cargo auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ac-ispell)))
+ '(powerline-color1 "#1E1E1E")
+ '(powerline-color2 "#111111")
+ '(psc-ide-add-import-on-completion t t)
+ '(psc-ide-rebuild-on-save nil t)
+ '(rainbow-identifiers-choose-face-function (quote rainbow-identifiers-cie-l*a*b*-choose-face) t)
+ '(rainbow-identifiers-cie-l*a*b*-color-count 1024 t)
+ '(rainbow-identifiers-cie-l*a*b*-lightness 80 t)
+ '(rainbow-identifiers-cie-l*a*b*-saturation 25 t)
+ '(standard-indent 2)
+ '(tide-tsserver-executable "/Users/gm/.nvm/versions/node/v7.8.0/bin/tsserver")
  '(tooltip-mode nil)
  '(typescript-indent-level 2)
- '(vc-annotate-background nil)
- '(vc-annotate-color-map
-   (quote
-    ((20 . "#F92672")
-     (40 . "#CF4F1F")
-     (60 . "#C26C0F")
-     (80 . "#E6DB74")
-     (100 . "#AB8C00")
-     (120 . "#A18F00")
-     (140 . "#989200")
-     (160 . "#8E9500")
-     (180 . "#A6E22E")
-     (200 . "#729A1E")
-     (220 . "#609C3C")
-     (240 . "#4E9D5B")
-     (260 . "#3C9F79")
-     (280 . "#A1EFE4")
-     (300 . "#299BA6")
-     (320 . "#2896B5")
-     (340 . "#2790C3")
-     (360 . "#66D9EF"))))
- '(vc-annotate-very-old-color nil)
- '(weechat-color-list
-   (unspecified "#272822" "#3E3D31" "#A20C41" "#F92672" "#67930F" "#A6E22E" "#968B26" "#E6DB74" "#21889B" "#66D9EF" "#A41F99" "#FD5FF0" "#349B8D" "#A1EFE4" "#F8F8F2" "#F8F8F0"))
+ '(web-mode-attr-indent-offset 2)
+ '(web-mode-code-indent-offset 2)
+ '(web-mode-css-indent-offset 2)
+ '(web-mode-markup-indent-offset 2)
  '(which-key-idle-delay 0.4))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-tooltip-annotation ((t (:foreground "#ff9eb8" :background "#49483e"))))
+ '(default ((((class color) (min-colors 257)) (:foreground "#f8fbfc" :background "#242728")) (((class color) (min-colors 89)) (:foreground "#F5F5F5" :background "#1B1E1C"))))
  '(company-tooltip-annotation-selection ((t (:background "#66d9ef"))))
- '(company-tooltip-common ((t (:inherit company-tooltip :weight bold :underline nil))))
- '(company-tooltip-common-selection ((t (:inherit company-tooltip-selection :weight bold :underline nil))))
- '(erc-timestamp-face ((t (:inherit font-lock-comment-face :foreground nil))))
- '(evil-search-highlight-persist-highlight-face ((t (:background "#fc5fef" :foreground "#000000"))))
- '(flycheck-fringe-error ((t (:background nil))))
- '(flycheck-fringe-info ((t (:background nil))))
- '(flycheck-fringe-warning ((t (:background nil))))
- '(font-latex-sectioning-0-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-sectioning-1-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-sectioning-2-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-sectioning-3-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-sectioning-4-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-sectioning-5-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-latex-slide-title-face ((t (:inherit default :height 1.0 :weight bold))))
- '(font-lock-builtin-face ((t (:foreground "#ff9eb8"))))
- '(font-lock-comment-face ((t (:slant italic))))
- '(font-lock-doc-face ((t (:slant italic))))
- '(font-lock-keyword-face ((t (:weight bold))))
- '(font-lock-string-face ((t (:slant italic))))
- '(font-lock-warning-face ((t (:underline nil))))
- '(helm-ff-prefix ((t (:background nil :foreground "#666666" :weight bold))))
+ '(font-latex-sectioning-0-face ((t (:inherit default :height 1.0))))
+ '(font-latex-sectioning-1-face ((t (:inherit default :height 1.0))))
+ '(font-latex-sectioning-2-face ((t (:inherit default :height 1.0))))
+ '(font-latex-sectioning-3-face ((t (:inherit default :height 1.0))))
+ '(font-latex-sectioning-4-face ((t (:inherit default :height 1.0))))
+ '(font-latex-sectioning-5-face ((t (:inherit default :height 1.0))))
+ '(font-latex-slide-title-face ((t (:inherit default :height 1.0))))
  '(helm-prefarg ((t (:foreground "PaleGreen"))))
  '(info-title-1 ((t (:inherit default :height 1.0 :weight bold))))
  '(info-title-2 ((t (:inherit default :height 1.0 :weight bold))))
  '(info-title-3 ((t (:inherit default :height 1.0 :weight bold))))
  '(info-title-4 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-1 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-2 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-3 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-4 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-5 ((t (:inherit default :height 1.0 :weight bold))))
- '(markdown-header-face-6 ((t (:inherit default :height 1.0 :weight bold))))
- '(mode-line ((t (:box (:color "#999999" :line-width 1 :style released-button)))))
- '(mode-line-inactive ((t (:box (:color "#666666" :line-width 1 :style released-button)))))
- '(org-document-title ((t (:inherit default :height 1.0 :weight bold))))
- '(org-done ((t (:foreground "MediumSpringGreen"))))
- '(org-level-1 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-2 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-3 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-4 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-5 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-6 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-7 ((t (:inherit default :height 1.0 :weight bold))))
- '(org-level-8 ((t (:inherit default :height 1.0 :weight bold))))
- '(powerline-active1 ((t (:box (:color "#999999" :line-width 1 :style released-button) :background "#5a5a5a"))))
- '(powerline-active2 ((t (:box (:color "#999999" :line-width 1 :style released-button)))))
- '(powerline-inactive1 ((t (:box (:color "#666666" :line-width 1 :style released-button)))))
- '(powerline-inactive2 ((t (:box (:color "#666666" :line-width 1 :style released-button)))))
- '(region ((t (:background "#998f84"))))
+ '(markdown-header-face ((t (:inherit default :height 1.0))))
+ '(markdown-header-face-1 ((t (:inherit default :height 1.0))))
+ '(markdown-header-face-2 ((t (:inherit default :height 1.0))))
+ '(markdown-header-face-3 ((t (:inherit default :height 1.0))))
+ '(markdown-header-face-4 ((t (:inherit default :height 1.0))))
+ '(markdown-header-face-5 ((t (:inherit default :height 1.0))))
+ '(markdown-header-face-6 ((t (:inherit default :height 1.0))))
+ '(org-document-title ((t (:inherit default :height 1.0))))
+ '(org-level-1 ((t (:inherit default :height 1.0))))
+ '(org-level-2 ((t (:inherit default :height 1.0))))
+ '(org-level-3 ((t (:inherit default :height 1.0))))
+ '(org-level-4 ((t (:inherit default :height 1.0))))
+ '(org-level-5 ((t (:inherit default :height 1.0))))
+ '(org-level-6 ((t (:inherit default :height 1.0))))
+ '(org-level-7 ((t (:inherit default :height 1.0))))
+ '(org-level-8 ((t (:inherit default :height 1.0))))
  '(spacemacs-transient-state-title-face ((t (:background nil :foreground nil :inherit font-lock-warning-face))))
  '(term ((t (:foreground nil :background nil))))
- '(web-mode-comment-face ((t (:inherit font-lock-comment-face :foreground nil))))
- '(web-mode-html-attr-name-face ((t (:inherit font-lock-variable-name-face :foreground nil))))
- '(web-mode-html-attr-value-face ((t (:inherit font-lock-string-face :foreground nil))))
- '(web-mode-html-tag-bracket-face ((t (:inherit web-mode-html-tag-face :foreground nil))))
- '(web-mode-html-tag-face ((t (:inherit font-lock-builtin-face :foreground nil :weight bold)))))
+ '(web-mode-html-tag-bracket-face ((t (:inherit web-mode-html-tag-face :foreground nil)))))
