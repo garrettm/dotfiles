@@ -66,7 +66,6 @@ values."
 
      ;; platform specific
      osx
-     ;; ycmd
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -166,8 +165,8 @@ values."
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Inconsolata"
-                               :size 14
+   dotspacemacs-default-font '("Hack"
+                               :size 12
                                :weight normal
                                :width normal
                                :powerline-scale 1.1)
@@ -301,6 +300,8 @@ in `dotspacemacs/user-config'."
   ;; Restore window position
   ;; (desktop-save-mode 1)
 
+  (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+
   ;; pin ensime to stable
   (push '("melpa-stable" . "stable.melpa.org/packages/") configuration-layer--elpa-archives)
   (push '(ensime . "melpa-stable") package-pinned-packages)
@@ -308,13 +309,6 @@ in `dotspacemacs/user-config'."
   ;; (setq-default flycheck-scalastylerc "/usr/local/etc/scalastyle_config.xml")
 
   (setq-default rust-enable-racer t)
-
-  ;; ycmd, only on os x
-  ;; (set-variable 'ycmd-server-command '("python"))
-  ;; (add-to-list 'ycmd-server-command (expand-file-name "~/things/ycmd/ycmd") t)
-  ;; (add-hook 'ycmd-mode-hook #'company-ycmd-setup)
-  ;; (add-hook 'ycmd-mode-hook #'flycheck-ycmd-setup)
-  ;; (add-hook 'after-init-hook #'global-ycmd-mode)
 
   (add-hook 'haskell-mode-hook 'interactive-haskell-mode)
 
@@ -342,6 +336,11 @@ This function is called at the very end of Spacemacs initialization after
 layers configuration. You are free to put any user code."
 
   (setq powerline-default-separator nil)
+
+  ;; https://github.com/syl20bnr/spacemacs/issues/5435
+  ;; This problem may be related with wid-edit.el and mouse-1-click-follows-link.
+  (add-hook 'spacemacs-buffer-mode-hook (lambda ()
+                                          (set (make-local-variable 'mouse-1-click-follows-link) nil)))
 
   ;; does this do anything?
   ;; (global-set-key (kbd "<ESC>") 'evil-escape)
@@ -392,11 +391,6 @@ layers configuration. You are free to put any user code."
   (global-flycheck-mode)
   (global-company-mode)
 
-  ;; (add-hook 'typescript-mode-hook 'ycmd-mode)
-  ;; (add-hook 'js2-mode-hook 'ycmd-mode)
-  ;; (global-ycmd-mode)
-
-
   (setq tab-width 2)
 
   ;; Better SPC-p-f projectile finding
@@ -424,8 +418,6 @@ layers configuration. You are free to put any user code."
   ;; control right/left arrow
   ;; (define-key evil-insert-state-map (kbd "C-right") 'evil-forward-word)
   ;; (define-key evil-insert-state-map (kbd "C-left") 'evil-backward-word)
-
-  ;; (add-to-list 'ycmd-file-type-map '(typescript-mode "typescript"))
   )
 
 
@@ -471,7 +463,7 @@ layers configuration. You are free to put any user code."
  '(helm-recentf-fuzzy-match t)
  '(hl-sexp-background-color "#1c1f26")
  '(js-indent-level 2)
- '(js2-basic-offset 2)
+ '(js2-basic-offset 2 t)
  '(mac-drawing-use-gcd t)
  '(magit-commit-arguments (quote ("--allow-empty" "--verbose")))
  '(main-line-color1 "#1E1E1E")
@@ -479,7 +471,7 @@ layers configuration. You are free to put any user code."
  '(main-line-separator-style (quote chamfer))
  '(package-selected-packages
    (quote
-    (diminish log4e winum unfill fuzzy sublime-themes toxi-theme spacegray-theme soothe-theme reverse-theme color-theme-sanityinc-tomorrow grandshell-theme color-theme-sanityinc-tomorrow-night-theme color-theme-sanityinc-tomorrow-theme molokai-theme psci purescript-mode psc-ide evil avy ample-zen-theme ample-theme material-theme simple-httpd json-snatcher json-reformat dash-functional packed bind-key tern alert haml-mode mmm-mode markdown-toc markdown-mode gh-md powerline hydra seq spinner company bind-map request skewer-mode company-emacs-eclim eclim noflet ensime sbt-mode scala-mode org pcache auto-complete highlight gruvbox-dark-theme rust-mode dash sql-indent pug-mode hide-comnt anzu yasnippet magit-popup async f web-mode racer persp-mode org-plus-contrib neotree macrostep js2-refactor intero help-fns+ helm-themes helm-projectile helm-ag haskell-snippets flycheck-rust evil-mc eshell-prompt-extras cmake-mode clj-refactor cider auto-yasnippet ace-window ace-link ace-jump-helm-line iedit smartparens undo-tree haskell-mode helm helm-core projectile magit git-commit with-editor js2-mode s typescript-mode flycheck xterm-color ws-butler window-numbering which-key web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toml-mode toc-org tide tagedit stickyfunc-enhance srefactor spacemacs-theme spaceline smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder restart-emacs ranger rainbow-delimiters queue quelpa popwin pkg-info pcre2el pbcopy paredit paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file mwim multiple-cursors multi-term move-text magit-gitflow lorem-ipsum livid-mode linum-relative link-hint less-css-mode launchctl labburn-theme json-mode js-doc jade-mode info+ inflections indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-swoop helm-mode-manager helm-make helm-hoogle helm-gitignore helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet gruvbox-theme gotham-theme google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flycheck-pos-tip flycheck-haskell flx-ido firebelly-theme fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eshell-z esh-help emmet-mode elisp-slime-nav edn dumb-jump disaster dash-at-point darktooth-theme darkokai-theme dakrone-theme company-web company-tern company-statistics company-quickhelp company-ghci company-ghc company-cabal company-c-headers column-enforce-mode color-theme-approximate coffee-mode cmm-mode clojure-snippets clojure-mode clean-aindent-mode clang-format cider-eval-sexp-fu cargo auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ac-ispell)))
+    (goto-chg org-category-capture ghc diminish log4e winum unfill fuzzy sublime-themes toxi-theme spacegray-theme soothe-theme reverse-theme color-theme-sanityinc-tomorrow grandshell-theme color-theme-sanityinc-tomorrow-night-theme color-theme-sanityinc-tomorrow-theme molokai-theme psci purescript-mode psc-ide evil avy ample-zen-theme ample-theme material-theme simple-httpd json-snatcher json-reformat dash-functional packed bind-key tern alert haml-mode mmm-mode markdown-toc markdown-mode gh-md powerline hydra seq spinner company bind-map request skewer-mode company-emacs-eclim eclim noflet ensime sbt-mode scala-mode org pcache auto-complete highlight gruvbox-dark-theme rust-mode dash sql-indent pug-mode hide-comnt anzu yasnippet magit-popup async f web-mode racer persp-mode org-plus-contrib neotree macrostep js2-refactor intero help-fns+ helm-themes helm-projectile helm-ag haskell-snippets flycheck-rust evil-mc eshell-prompt-extras cmake-mode clj-refactor cider auto-yasnippet ace-window ace-link ace-jump-helm-line iedit smartparens undo-tree haskell-mode helm helm-core projectile magit git-commit with-editor js2-mode s typescript-mode flycheck xterm-color ws-butler window-numbering which-key web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package toml-mode toc-org tide tagedit stickyfunc-enhance srefactor spacemacs-theme spaceline smeargle slim-mode shell-pop scss-mode sass-mode reveal-in-osx-finder restart-emacs ranger rainbow-delimiters queue quelpa popwin pkg-info pcre2el pbcopy paredit paradox osx-trash osx-dictionary orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file mwim multiple-cursors multi-term move-text magit-gitflow lorem-ipsum livid-mode linum-relative link-hint less-css-mode launchctl labburn-theme json-mode js-doc jade-mode info+ inflections indent-guide ido-vertical-mode ibuffer-projectile hungry-delete htmlize hlint-refactor hl-todo hindent highlight-parentheses highlight-numbers highlight-indentation helm-swoop helm-mode-manager helm-make helm-hoogle helm-gitignore helm-flx helm-descbinds helm-dash helm-css-scss helm-company helm-c-yasnippet gruvbox-theme gotham-theme google-translate golden-ratio gnuplot gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link flycheck-pos-tip flycheck-haskell flx-ido firebelly-theme fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-matchit evil-magit evil-lisp-state evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eshell-z esh-help emmet-mode elisp-slime-nav edn dumb-jump disaster dash-at-point darktooth-theme darkokai-theme dakrone-theme company-web company-tern company-statistics company-quickhelp company-ghci company-ghc company-cabal company-c-headers column-enforce-mode color-theme-approximate coffee-mode cmm-mode clojure-snippets clojure-mode clean-aindent-mode clang-format cider-eval-sexp-fu cargo auto-highlight-symbol auto-compile aggressive-indent adaptive-wrap ac-ispell)))
  '(powerline-color1 "#1E1E1E")
  '(powerline-color2 "#111111")
  '(psc-ide-add-import-on-completion t t)
@@ -489,7 +481,7 @@ layers configuration. You are free to put any user code."
  '(rainbow-identifiers-cie-l*a*b*-lightness 80 t)
  '(rainbow-identifiers-cie-l*a*b*-saturation 25 t)
  '(standard-indent 2)
- '(tide-tsserver-executable "/Users/gm/.nvm/versions/node/v7.8.0/bin/tsserver")
+ '(tide-tsserver-executable "/Users/gm/.nvm/versions/node/v8.6.0/bin/tsserver")
  '(tooltip-mode nil)
  '(typescript-indent-level 2)
  '(web-mode-attr-indent-offset 2)
